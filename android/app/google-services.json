@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "901700721883",
+    "project_id": "gastro-delivery-24710",
+    "storage_bucket": "gastro-delivery-24710.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:901700721883:android:219c7dc9ea7c3a608c40fe",
+        "android_client_info": {
+          "package_name": "com.proyectodam.gastro_delivery"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB67-LQrGNB3IH0e3w7GquoeT7OjqZNdJw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
