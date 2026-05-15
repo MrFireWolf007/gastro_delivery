@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -38,12 +39,19 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
-  await PushNotificationService.instance.initialize();
+
+  // Inicializar Firebase Messaging solo en plataformas móviles (Android/iOS), no en web
+  if (!kIsWeb) {
+    FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
+    await PushNotificationService.instance.initialize();
+  }
+
   await FirebaseAuth.instance.signOut();
 
-  // Solicitar permisos de almacenamiento
-  await _requestPermissions();
+  // Solicitar permisos de almacenamiento solo en plataformas móviles
+  if (!kIsWeb) {
+    await _requestPermissions();
+  }
 
   runApp(const MyApp());
 }
@@ -83,13 +91,16 @@ class MyApp extends StatelessWidget {
                   return const LoginScreen();
                 }
 
-                unawaited(
-                  pushNotificationService.configureForUser(
-                    uid: user.uid,
-                    restaurantId: user.restaurantId,
-                    role: user.role,
-                  ),
-                );
+                // Configurar notificaciones solo en plataformas móviles
+                if (!kIsWeb) {
+                  unawaited(
+                    pushNotificationService.configureForUser(
+                      uid: user.uid,
+                      restaurantId: user.restaurantId,
+                      role: user.role,
+                    ),
+                  );
+                }
 
                 if (user.role == 'admin') {
                   return const AdminMenuScreen();
