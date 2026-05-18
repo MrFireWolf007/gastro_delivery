@@ -233,10 +233,10 @@ Estados:
 - Disponible offline (con limitaciones)
 
 8.4 Dispositivos Compatibles
-Android 11 o superior
-Navegadores modernos (Chrome)
-Probado en Xiaomi Redmi 8
-Emulador Pixel 7
+- Android 11 o superior
+- Navegadores modernos (Chrome)
+- Probado en Xiaomi Redmi 8
+- Emulador Pixel 7
 
 ## (9) SOLUCIONES A PROBLEMAS COMUNES
 9.1 Problema: No puedo iniciar sesión
