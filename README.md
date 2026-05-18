@@ -71,53 +71,192 @@ Pasos:
 - Ingresa la descripción del plato
 - Selecciona la categoría (Entrante, Principal, Postre, Bebida)
 - Ingresa el precio del plato
-- Toca "Seleccionar Imagen"
-```bash
-flutter run \
-  --dart-define=CLOUDINARY_CLOUD_NAME=tu_cloud_name \
-  --dart-define=CLOUDINARY_UPLOAD_PRESET=tu_upload_preset
-```
+- Toca "Seleccionar Imagen" para cargar una foto desde el dispositivo
+- Espera a que la imagen se suba a Cloudinary y guarde la URL en Firestore
+- Marca el plato como disponible si quieres que sea visible para los clientes
+- Toca en "Guardar Plato" para añadirlo al menú
+- Resultado: El plato aparece a los clientes inmediatamente en el menú
 
-## Firebase Messaging / notificaciones
+5.4 Pestaña 3: Editar Platos
+Permite modificar los platos existentes:
+Pasos:
+- Filtra por categoría si lo deseas
+- Selecciona el plato que quieres editar
+- Modifica los campos que necesites (nombre, descripción, precio, imagen, etc...)
+- Usa el toggle "Disponible" para marcar el plato como disponible o no
+- Toca "Guardar Cambios" para actualizar el plato
+- Usa el botón "Eliminar" para borrar el plato del menú
+- Resultado: Los cambios se reflejan en tiempo real para los clientes
 
-La app ya inicializa Firebase Messaging y muestra notificaciones en primer plano
-con `flutter_local_notifications`.
+5.5 Pestaña 4: Reservas
+Muestra todas las reservas realizadas por los clientes:
+Información mostrada:
+- Nombre del cliente
+- Número de personas
+- Fecha y hora de la reserva
+- Estado de la reserva (pendiente, confirmada, cancelada)
+Acciones:
+- Toca una reserva para ver detalles completos
+- Usa el botón "Confirmar" para aceptar la reserva
+- Usa el botón "Cancelar" para rechazar la reserva
+- Resultado: El cliente recibe una notificación con el estado de su reserva
 
-### Qué hace la app
+5.6 Pestaña 5: Pedidos
+Gestiona los pedidos realizados por los clientes:
+Información mostrada:
+- Nombre del cliente
+- Detalles del pedido (platos, cantidades, precio total)
+- Estado del pedido (pendiente, en preparación, listo para recoger, entregado)
+- Fecha y hora del pedido
+Filtros:
+- Puedes filtrar por estado para ver solo lo que necesitas
+- Toca en los chips de color para cambiar el filtro
+- Cambiar Estado del Pedido:
+- Toca en un pedido
+- Se abre un menú con los estados válidos para ese pedido
+- Selecciona el nuevo estado
+- El cliente recibirá una notificación automática
+Estados posibles:
+- Pendiente → Confirmado, Cancelado
+- Confirmado → En Preparación, Cancelado
+- En Preparación → Entregado, Cancelado
+- Entregado (Final)
+- Cancelado (Final)
 
-- Solicita permiso de notificaciones al arrancar.
-- Se suscribe automáticamente al topic del restaurante del usuario:
-  - `restaurant_res01` para el restaurante asignado
-  - `user_<uid>` para notificaciones personales
-  - `role_admin` o `role_client` según el rol
-- Muestra notificaciones locales cuando llega un mensaje FCM con la app abierta.
+5.7 Cerrar sesión
+Abre el Drawer (Menú lateral)
+- Toca "Cerrar Sesión" al final del menú
+- Confirma que quieres cerrar sesión
+- Resultado: Serás redirigido a la pantalla de inicio de sesión (Login)
 
-### Cómo probarlo
+## (6) GUÍA DE USO - CLIENTE
+6.1 Pantalla Principal
+- Al iniciar sesion como cliente, verás:
+- 5 pestañas principales: Menú, Carrito, Pedidos, Reservas y Perfil
+- Cada pestaña tiene funcionalidades específicas para los clientes
 
-1. Arranca la app en un dispositivo real.
-2. Ve a Firebase Console → Messaging.
-3. Crea un mensaje de prueba.
-4. En destino, selecciona el topic `restaurant_res01`.
-5. Envía el mensaje.
+6.2 Pestaña 1: Menú
+Muestra todos los platos disponibles con:
+- Filtros por categoría (Todas, General(No se usa), Entrantes, Principales, Postres, Bebidas)
+- Imagen del plato
+- Nombre del plato
+- Descripción breve
+- Precio
+- Categoría
+- Boton "Agregar al Carrito" para añadir el plato al carrito de compras
+Acciones: 
+- Desliza hacia abajo para ver más platos
+- Toca "Agregar al Carrito" para añadir un plato a tu carrito
+Resultado: El plato se añade al carrito y se muestra una notificación de confirmación
 
-### Prueba con token
+6.3 Pestaña 2: Reservar
+Permite hacer reservas en el restaurante con:
+- Formulario de reserva con campos para número de personas, fecha y hora
+- Botón "Reservar ahora" para enviar la reserva
+- Resultado: Se crea la reserva y se muestra un resumen con los detalles de la reserva
+- Recibirás una notificación automática con el estado de tu reserva (pendiente, confirmada, cancelada)
 
-La app imprime en los logs el token FCM del dispositivo cuando un usuario inicia
-sesión. Ese token te permite enviar una prueba directa desde Firebase Console o
-desde una herramienta de backend.
+6.4 Pestaña 3: Mis Reservas
+Muestra todas las reservas realizadas por el cliente con:
+- Fecha y hora de la reserva
+- Número de personas
+- Estado de la reserva (pendiente, confirmada, cancelada)
 
-Busca en los logs algo como:
+6.5 Pestaña 4: Carrito
+Muestra los platos que has añadido al carrito con:
+Si el carrito está vacío:
+- Muestra un mensaje "Tu carrito está vacío" con un botón para ver menú de platos
+Si el carrito tiene platos: 
+- Muestra una lista con los platos añadidos, cada uno con :
+- Imagen del plato
+- Nombre del plato
+- Precio del plato
+- Cantidad seleccionada con dos botones "+" y "-" para ajustar la cantidad
+- Precio total del pedido calculado automáticamente
+- Botón "Realizar Pedido" para confirmar el pedido
+- Resultado: Se crea el pedido y se muestra un resumen con los detalles del pedido
 
-```text
-FCM token: eyJhbGciOi...
-```
+6.6 Pestaña 5: Mis Pedidos
+Muestra todos los pedidos realizados por el cliente y el estado actual de cada uno con:
+- Id del pedido
+- Estado del pedido (pendiente, en preparación, listo para recoger, entregado)
+- Fecha y hora del pedido
+- Número de platos en el pedido
+- Precio total del pedido
 
-Ese valor puedes usarlo para una prueba individual del dispositivo.
+## (7) SISTEMA DE NOTIFICACIONES
+7.1 ¿Cómo Funciona?
+- La app usa Firebase Cloud Messaging para enviar notificaciones
+- Los usuarios se suscriben automáticamente a canales según su rol
+- Las notificaciones llegan en tiempo real
 
-### Nota importante
+7.2 Tipos de Notificaciones
+Para Administradores:
+- Nuevo pedido creado
+- Cambios en reservas
+- Actualizaciones del sistema
+Para Clientes:
+- Confirmación de pedido
+- Cambios en el estado del pedido
+- Notificaciones de reservas
 
-FCM necesita un origen que envíe los mensajes. Desde este proyecto ya queda
-preparada la recepción y la suscripción a topics; para envíos automáticos desde
-el cambio de estado de pedidos, lo normal es usar una Cloud Function o Firebase
-Console.
+7.3 Cómo Recibir Notificaciones
+Requisitos:
+- Debes estar registrado y con sesión iniciada
+- Debes haber autorizado los permisos de notificaciones (pedido al instalar)
+- Debes tener conexión a internet
+Estados:
+- App Abierta: La notificación aparece como card dentro de la app
+- App Cerrada: La notificación aparece en la bandeja del dispositivo
+- App en Background: La notificación aparece en la bandeja
+- ¿No recibes notificaciones?
+- Verifica que los permisos estén autorizados en Configuración del Dispositivo
+- Asegúrate de estar conectado a internet
+- Cierra y reabre la app
+- Comprueba que hayas iniciado sesión correctamente
 
+## (8) CARACTERÍSTICAS TÉCNICAS
+8.1 Seguridad
+- Autenticación mediante Google Firebase
+- Contraseñas encriptadas
+- Reglas de Firestore que protegen la información personal
+- Solo verás tus propios datos y los del restaurante
+
+8.2 Almacenamiento de Imágenes
+- Las imágenes de platos se guardan en Cloudinary
+- Está optimizado para carga rápida
+- Funciona incluso con conexión lenta
+
+8.3 Base de Datos
+- Todos los datos se guardan en Firebase Firestore
+- Sincronización en tiempo real
+- Disponible offline (con limitaciones)
+
+8.4 Dispositivos Compatibles
+Android 11 o superior
+Navegadores modernos (Chrome)
+Probado en Xiaomi Redmi 8
+Emulador Pixel 7
+
+## (9) SOLUCIONES A PROBLEMAS COMUNES
+9.1 Problema: No puedo iniciar sesión
+Solución:
+- Verifica tu conexión a internet
+- Asegúrate de usar el correo y contraseña correctos
+- Si el problema persiste, contacta con soporte técnico
+
+9.2 Problema: No veo los platos en el menú
+Solución:
+- Verifica que el administrador haya marcado los platos como disponibles
+- Asegúrate de tener conexión a internet para cargar los datos
+- Si el problema persiste, contacta con soporte técnico
+
+9.3 Problema: No recibo notificaciones
+Solución:
+- Verifica que hayas autorizado los permisos de notificaciones
+- Asegúrate de estar conectado a internet
+- Cierra y reabre la app para restablecer la conexión de notificaciones
+- Si el problema persiste, contacta con soporte técnico
+
+## (10) CONTACTO Y SOPORTE
+Si tienes alguna pregunta, problema o sugerencia, no dudes en contactarnos
