@@ -259,4 +259,4 @@ Solución:
 - Si el problema persiste, contacta con soporte técnico
 
 ## (10) CONTACTO Y SOPORTE
-Si tienes alguna pregunta, problema o sugerencia, no dudes en contactarnos
+Contacta con el equipo de soporte para cualquier duda o problema relacionado con Gastro Delivery
