@@ -402,8 +402,10 @@ class _UserMenuScreenState extends State<UserMenuScreen>
 				  style: TextStyle(color: Colors.grey.shade700),
 				),
 				const SizedBox(height: 8),
-				Row(
-				  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+				Wrap(
+				  alignment: WrapAlignment.spaceBetween,
+				  runSpacing: 8,
+				  spacing: 8,
 				  children: [
 					Text(
 					  menu.category,
@@ -522,7 +524,7 @@ class _UserMenuScreenState extends State<UserMenuScreen>
 				  crossAxisCount: crossAxis,
 				  crossAxisSpacing: 12,
 				  mainAxisSpacing: 12,
-				  childAspectRatio: 0.78,
+				  childAspectRatio: 0.72,
 				),
 				itemCount: filteredMenus.length,
 				itemBuilder: (context, index) => _menuCard(filteredMenus[index]),
@@ -1186,15 +1188,20 @@ class _UserMenuScreenState extends State<UserMenuScreen>
 				child: SizedBox(
 				  width: contentWidth,
 				  height: constraints.maxHeight,
-				  child: TabBarView(
-					controller: _tabController,
-					children: [
-					  _buildMenuTab(user),
-					  _buildReservationTab(user),
-					  _buildReservationsTab(user),
-					  _buildCartTab(user),
-					  _buildOrdersTab(user),
-					],
+
+				  child: SafeArea(
+					top: false,
+					bottom: true,
+					child: TabBarView(
+					  controller: _tabController,
+					  children: [
+						_buildMenuTab(user),
+						_buildReservationTab(user),
+						_buildReservationsTab(user),
+						_buildCartTab(user),
+						_buildOrdersTab(user),
+					  ],
+					),
 				  ),
 				),
 			  );

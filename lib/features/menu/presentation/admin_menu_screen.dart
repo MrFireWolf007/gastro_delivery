@@ -1050,7 +1050,7 @@ class _AdminMenuScreenState extends State<AdminMenuScreen>
                                 MediaQuery.of(context).size.width >= 600 ? 3 : 2,
                             mainAxisSpacing: 12,
                             crossAxisSpacing: 12,
-                            mainAxisExtent: 88,
+                            mainAxisExtent: 96,
                           ),
                           itemBuilder: (context, index) {
                             switch (index) {
@@ -1100,22 +1100,29 @@ class _AdminMenuScreenState extends State<AdminMenuScreen>
       child: Padding(
         padding: const EdgeInsets.all(14),
         child: Column(
+          mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
                   label,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                   style: TextStyle(color: Colors.grey.shade700, fontSize: 12),
                 ),
                 Icon(icon, color: Colors.redAccent, size: 18),
               ],
             ),
-            Text(
-              value,
-              style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            const SizedBox(height: 6),
+            FittedBox(
+              fit: BoxFit.scaleDown,
+              alignment: Alignment.centerLeft,
+              child: Text(
+                value,
+                style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              ),
             ),
           ],
         ),
@@ -1623,28 +1630,27 @@ class _AdminMenuScreenState extends State<AdminMenuScreen>
                 ),
               ),
               const SizedBox(height: 18),
-              StreamBuilder<List<ReservationModel>>(
-                stream: _reservationService.getReservationsByRestaurant(restaurantId),
-                builder: (context, snapshot) {
-                  if (snapshot.hasError) {
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 20),
-                      child: Text('Error cargando reservas: ${snapshot.error}'),
-                    );
-                  }
+              Expanded(
+                child: StreamBuilder<List<ReservationModel>>(
+                  stream: _reservationService.getReservationsByRestaurant(restaurantId),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasError) {
+                      return Center(
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 20),
+                          child: Text('Error cargando reservas: ${snapshot.error}'),
+                        ),
+                      );
+                    }
 
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Padding(
-                      padding: EdgeInsets.symmetric(vertical: 24),
-                      child: Center(child: CircularProgressIndicator()),
-                    );
-                  }
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Center(child: CircularProgressIndicator());
+                    }
 
-                  if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 18),
-                      child: Center(
+                    if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                      return Center(
                         child: Column(
+                          mainAxisSize: MainAxisSize.min,
                           children: [
                             Icon(
                               Icons.event_busy_outlined,
@@ -1658,25 +1664,23 @@ class _AdminMenuScreenState extends State<AdminMenuScreen>
                             ),
                           ],
                         ),
-                      ),
-                    );
-                  }
+                      );
+                    }
 
-                  final reservations = snapshot.data!;
-                  final filteredReservations = _selectedReservationStatus == 'all'
-                      ? reservations
-                      : reservations
-                          .where(
-                            (reservation) => reservation.status.trim().toLowerCase() ==
-                                _selectedReservationStatus,
-                          )
-                          .toList();
+                    final reservations = snapshot.data!;
+                    final filteredReservations = _selectedReservationStatus == 'all'
+                        ? reservations
+                        : reservations
+                            .where(
+                              (reservation) => reservation.status.trim().toLowerCase() ==
+                                  _selectedReservationStatus,
+                            )
+                            .toList();
 
-                  if (filteredReservations.isEmpty) {
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 18),
-                      child: Center(
+                    if (filteredReservations.isEmpty) {
+                      return Center(
                         child: Column(
+                          mainAxisSize: MainAxisSize.min,
                           children: [
                             Icon(
                               Icons.filter_alt_off_outlined,
@@ -1690,22 +1694,21 @@ class _AdminMenuScreenState extends State<AdminMenuScreen>
                             ),
                           ],
                         ),
+                      );
+                    }
+
+                    return ListView.separated(
+                      padding: const EdgeInsets.only(bottom: 8),
+                      itemCount: filteredReservations.length,
+                      separatorBuilder: (context, index) => const SizedBox(height: 10),
+                      itemBuilder: (context, index) => _reservationCard(
+                        context,
+                        restaurantId,
+                        filteredReservations[index],
                       ),
                     );
-                  }
-
-                  return ListView.separated(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemCount: filteredReservations.length,
-                    separatorBuilder: (context, index) => const SizedBox(height: 10),
-                    itemBuilder: (context, index) => _reservationCard(
-                      context,
-                      restaurantId,
-                      filteredReservations[index],
-                    ),
-                  );
-                },
+                  },
+                ),
               ),
             ],
           ),
@@ -2040,15 +2043,20 @@ class _AdminMenuScreenState extends State<AdminMenuScreen>
                 child: SizedBox(
                   width: contentWidth,
                   height: constraints.maxHeight,
-                  child: TabBarView(
-                    controller: _tabController,
-                    children: [
-                      _buildSummaryTab(restaurantId),
-                      _buildCreateTab(restaurantId),
-                      _buildManageTab(restaurantId),
-                      _buildReservationsTab(restaurantId),
-                      _buildOrdersTab(restaurantId),
-                    ],
+
+                  child: SafeArea(
+                    top: false,
+                    bottom: true,
+                    child: TabBarView(
+                      controller: _tabController,
+                      children: [
+                        _buildSummaryTab(restaurantId),
+                        _buildCreateTab(restaurantId),
+                        _buildManageTab(restaurantId),
+                        _buildReservationsTab(restaurantId),
+                        _buildOrdersTab(restaurantId),
+                      ],
+                    ),
                   ),
                 ),
               );
