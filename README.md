@@ -1,6 +1,6 @@
-# (1) Documentación del proyecto de FCT - Gastro Delivery
+# (1) Documentación del proyecto de TFG - Gastro Delivery
 
-Proyecto para FCT de Segundo de Desarrollo de Aplicaciones Multiplataforma.
+Proyecto para TFG de Segundo de Desarrollo de Aplicaciones Multiplataforma.
 Gastro Delivery es una app que permite a los administradores gestionar su menú,
 las reservas y los pedidos que recibe un restaurante, mientras que los clientes pueden navegar por el menú, realizar los pedidos y hacer
 reservas en el restaurante, teniendo asi dos roles diferentes para los usuarios: administrador y cliente.
